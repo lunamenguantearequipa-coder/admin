@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luna Menguante - Panel Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #F5F2EA;
+      --bg2: #EDE5D5;
+      --dark: #1E0F06;
+      --brown: #642f11;
+      --gold: #e6ab5b;
+      --gold2: #f0c878;
+      --muted: #8A7060;
+      --border: rgba(100,47,17,.12);
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: var(--sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      background: rgba(245,242,234,.97);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    h1 {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      color: var(--brown);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .auth-box {
+      background: var(--bg2);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    .auth-box input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+    }
+    
+    .auth-box button {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--brown);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background 0.2s;
+    }
+    
+    .auth-box button:hover {
+      background: var(--gold);
+    }
+    
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    .nav-tabs button {
+      background: none;
+      border: none;
+      padding: 1rem 1.5rem;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.25s;
+    }
+    
+    .nav-tabs button.active {
+      color: var(--brown);
+      border-bottom-color: var(--gold);
+      font-weight: 500;
+    }
+    
+    .nav-tabs button:hover {
+      color: var(--brown);
+    }
+    
+    .panel { display: none; }
+    .panel.active { display: block; }
+    
+    .form-section {
+      background: rgba(245,242,234,.97);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .form-section h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--brown);
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--brown);
+      font-size: 0.9rem;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      background: white;
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 1024px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    button.btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    
+    .btn-primary {
+      background: var(--brown);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--dark);
+    }
+    
+    .btn-secondary {
+      background: var(--gold);
+      color: var(--dark);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--gold2);
+    }
+    
+    .btn-danger {
+      background: #91041b;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: #a01520;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    th {
+      background: var(--bg2);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brown);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(230,171,91,0.05);
+    }
+    
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .alert-success {
+      background: rgba(99,153,34,0.1);
+      color: #3B6D11;
+      border-left: 3px solid #3B6D11;
+    }
+    
+    .alert-error {
+      background: rgba(145,4,27,0.1);
+      color: #91041b;
+      border-left: 3px solid #91041b;
+    }
+    
+    .alert-info {
+      background: rgba(24,95,165,0.1);
+      color: #185FA5;
+      border-left: 3px solid #185FA5;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .action-buttons button {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .status-activo {
+      background: rgba(99,153,34,0.2);
+      color: #3B6D11;
+    }
+    
+    .status-inactivo {
+      background: rgba(100,47,17,0.2);
+      color: var(--brown);
+    }
+    
+    .price-tier {
+      background: var(--bg2);
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    
+    .price-tier label {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .info-text {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+    }
+    
+    .spinner {
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--brown);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🌙 Luna Menguante — Panel Admin</h1>
+      <button class="btn btn-secondary" id="logoutBtn" style="display:none;">Cerrar sesión</button>
+    </header>
+
+    <!-- AUTENTICACIÓN -->
+    <div id="authPanel" class="auth-box">
+      <h2 style="font-family: var(--serif); color: var(--brown); margin-bottom: 1rem;">Acceso al panel</h2>
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Contraseña">
+      <button onclick="login()">Ingresar</button>
+      <div id="authError" style="color: #91041b; margin-top: 1rem; display: none;"></div>
+    </div>
+
+    <!-- PANEL PRINCIPAL (oculto hasta autenticarse) -->
+    <div id="mainPanel" style="display: none;">
+      <div class="nav-tabs">
+        <button class="nav-btn active" data-tab="productos">📦 Productos</button>
+        <button class="nav-btn" data-tab="cursos">📚 Cursos</button>
+        <button class="nav-btn" data-tab="retiros">🏔️ Retiros</button>
+        <button class="nav-btn" data-tab="membresia">👥 Membresía</button>
+        <button class="nav-btn" data-tab="inscripciones">📋 Inscripciones</button>
+      </div>
+
+      <!-- PRODUCTOS -->
+      <div id="productos" class="panel active">
+        <div class="form-section">
+          <h2>Nuevo Producto</h2>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="prod_nombre" placeholder="Ej: Tarot Van Gogh">
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="prod_desc" placeholder="Descripción del producto"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Precio (S/)</label>
+              <input type="number" id="prod_precio" placeholder="0.00" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Categoría</label>
+              <select id="prod_categoria">
+                <option value="">Seleccionar...</option>
+                <option value="tarot">Tarot</option>
+                <option value="velas">Velas</option>
+                <option value="baños">Baños</option>
+                <option value="aromatizantes">Aromatizantes</option>
+                <option value="cuarzos">Cuarzos</option>
+                <option value="sahumerios">Sahumerios</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Stock</label>
+              <input type="number" id="prod_stock" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>URL de Imagen</label>
+            <input type="text" id="prod_imagen" placeholder="https://...">
+            <div class="info-text">Por ahora hospedá la imagen en Supabase Storage o usa URLs externas</div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="guardarProducto()">Guardar Producto</button>
+            <button class="btn btn-secondary" onclick="cargarProductos()">Limpiar formulario</button>
+          </div>
+        </div>
+
+        <div id="productosTable" class="form-section">
+          <h2>Productos Existentes</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="productosBody">
+              <tr><td colspan="5" class="loading">Cargando productos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CURSOS -->
+      <div id="cursos" class="panel">
+        <div class="form-section">
+          <h2>Gestionar Curso</h2>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="curso_nombre" placeholder="Lenguaje del Alma">
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="curso_desc" placeholder="Descripción completa del curso"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Inicio</label>
+              <input type="date" id="curso_inicio">
+            </div>
+            <div class="form-group">
+              <label>Duración (semanas)</label>
+              <input type="number" id="curso_duracion" value="12">
+            </div>
+            <div class="form-group">
+              <label>Ciudad</label>
+              <input type="text" id="curso_ciudad" value="Online">
+            </div>
+          </div>
+
+          <h3 style="font-size: 1.1rem; margin-top: 1.5rem; color: var(--brown);">Precios</h3>
+          <div class="price-tier">
+            <label>Regular (S/)</label>
+            <input type="number" id="curso_precio_regular" placeholder="850.00" step="0.01">
+          </div>
+          <div class="price-tier">
+            <label>Preventa (S/)</label>
+            <input type="number" id="curso_precio_preventa" placeholder="750.00" step="0.01">
+          </div>
+          <div class="price-tier">
+            <label>Evento Esta Noche (S/)</label>
+            <input type="number" id="curso_precio_evento" placeholder="650.00" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>URL de Imagen</label>
+            <input type="text" id="curso_imagen" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="curso_estado">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+              <option value="oculto">Oculto</option>
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="guardarCurso()">Guardar Cambios</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RETIROS -->
+      <div id="retiros" class="panel">
+        <div class="form-section">
+          <h2>Gestionar Retiro</h2>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="retiro_nombre" placeholder="Retiro al Colca: Volver a Nosotros">
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="retiro_desc" placeholder="Descripción completa del retiro"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ubicación</label>
+              <input type="text" id="retiro_ubicacion" value="Valle del Colca">
+            </div>
+            <div class="form-group">
+              <label>Inicio</label>
+              <input type="date" id="retiro_inicio">
+            </div>
+            <div class="form-group">
+              <label>Fin</label>
+              <input type="date" id="retiro_fin">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cupos máximos</label>
+              <input type="number" id="retiro_cupos" value="20">
+            </div>
+            <div class="form-group">
+              <label>Adelanto requerido (S/)</label>
+              <input type="number" id="retiro_adelanto" placeholder="450.00" step="0.01">
+            </div>
+          </div>
+
+          <h3 style="font-size: 1.1rem; margin-top: 1.5rem; color: var(--brown);">Precios</h3>
+          <div class="price-tier">
+            <label>Regular (S/)</label>
+            <input type="number" id="retiro_precio_regular" placeholder="950.00" step="0.01">
+          </div>
+          <div class="price-tier">
+            <label>Preventa (S/)</label>
+            <input type="number" id="retiro_precio_preventa" placeholder="900.00" step="0.01">
+          </div>
+          <div class="price-tier">
+            <label>Evento Esta Noche (S/)</label>
+            <input type="number" id="retiro_precio_evento" placeholder="850.00" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>URL de Imagen</label>
+            <input type="text" id="retiro_imagen" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label>¿Qué incluye? (separado por comas)</label>
+            <textarea id="retiro_incluye" placeholder="Transporte, Hospedaje, Alimentación, Círculo bajo luna llena, Rituales y prácticas lunares"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="retiro_estado">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+              <option value="oculto">Oculto</option>
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="guardarRetiro()">Guardar Cambios</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMBRESÍA -->
+      <div id="membresia" class="panel">
+        <div class="form-section">
+          <h2>Gestionar Membresía Club: Tribu Menguante</h2>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="mem_nombre" value="Club: Tribu Menguante">
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="mem_desc" placeholder="Descripción de los beneficios..."></textarea>
+          </div>
+
+          <h3 style="font-size: 1.1rem; margin-top: 1.5rem; color: var(--brown);">Precio Mensual</h3>
+          <div class="price-tier">
+            <label>Regular (S/)</label>
+            <input type="number" id="mem_precio_regular" value="135.00" step="0.01">
+          </div>
+          <div class="price-tier">
+            <label>Preventa (S/)</label>
+            <input type="number" id="mem_precio_preventa" value="135.00" step="0.01">
+          </div>
+          <div class="price-tier">
+            <label>Evento Esta Noche (S/)</label>
+            <input type="number" id="mem_precio_evento" value="135.00" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Beneficios (uno por línea)</label>
+            <textarea id="mem_beneficios" placeholder="Caja del mes - Nuevos rituales y productos elegidos&#10;Ritual personalizado - Según tu signo y luna del mes&#10;Círculo en vivo mensual - Meditación, tirada grupal, práctica compartida&#10;Portal exclusivo - Contenido del mes + 15% descuento siempre"></textarea>
+            <div class="info-text">Escribe cada beneficio en una línea nueva</div>
+          </div>
+
+          <div class="form-group">
+            <label>URL de Imagen</label>
+            <input type="text" id="mem_imagen" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="mem_estado">
+              <option value="activo" selected>Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="guardarMembresia()">Guardar Cambios</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSCRIPCIONES -->
+      <div id="inscripciones" class="panel">
+        <div class="form-section">
+          <h2>Inscripciones y Registros</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Filtrar por tipo</label>
+              <select id="filtro_tipo" onchange="cargarInscripciones()">
+                <option value="">Todos</option>
+                <option value="curso">Cursos</option>
+                <option value="retiro">Retiros</option>
+                <option value="membresia">Membresías</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="inscripcionesTable" class="form-section">
+          <h2>Registros</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>WhatsApp</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="inscripcionesBody">
+              <tr><td colspan="7" class="loading">Cargando inscripciones...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://cvwyphhipvxjlusiyhrt.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_1lc4NcRtnua6phBbMvnXNw_POQ62Flr';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+
+    // NAV TABS
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        e.target.classList.add('active');
+        const tabName = e.target.dataset.tab;
+        document.getElementById(tabName).classList.add('active');
+        if (tabName === 'productos') cargarProductos();
+        if (tabName === 'inscripciones') cargarInscripciones();
+      });
+    });
+
+    // LOGIN
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      if (!email || !password) {
+        alert('Completa email y contraseña');
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        
+        currentUser = data.user;
+        document.getElementById('authPanel').style.display = 'none';
+        document.getElementById('mainPanel').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'block';
+        cargarProductos();
+      } catch (err) {
+        document.getElementById('authError').textContent = 'Error: ' + err.message;
+        document.getElementById('authError').style.display = 'block';
+      }
+    }
+
+    // LOGOUT
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      currentUser = null;
+      document.getElementById('authPanel').style.display = 'block';
+      document.getElementById('mainPanel').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+    });
+
+    // CARGAR PRODUCTOS
+    async function cargarProductos() {
+      try {
+        const { data, error } = await supabase
+          .from('productos')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const tbody = document.getElementById('productosBody');
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay productos aún</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.map(p => `
+          <tr>
+            <td>${p.nombre}</td>
+            <td>${p.categoria || '-'}</td>
+            <td>S/ ${parseFloat(p.precio).toFixed(2)}</td>
+            <td>${p.stock || 0}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="editarProducto('${p.id}')">Editar</button>
+                <button class="btn btn-danger" onclick="eliminarProducto('${p.id}')">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // GUARDAR PRODUCTO
+    async function guardarProducto() {
+      const nombre = document.getElementById('prod_nombre').value;
+      const desc = document.getElementById('prod_desc').value;
+      const precio = document.getElementById('prod_precio').value;
+      const categoria = document.getElementById('prod_categoria').value;
+      const stock = document.getElementById('prod_stock').value;
+      const imagen = document.getElementById('prod_imagen').value;
+
+      if (!nombre || !precio) {
+        alert('Nombre y precio son requeridos');
+        return;
+      }
+
+      try {
+        const { error } = await supabase.from('productos').insert([{
+          nombre,
+          descripcion: desc,
+          precio: parseFloat(precio),
+          categoria,
+          stock: parseInt(stock) || 0,
+          imagen_url: imagen,
+          estado: 'activo'
+        }]);
+
+        if (error) throw error;
+        alert('Producto guardado');
+        document.getElementById('prod_nombre').value = '';
+        document.getElementById('prod_desc').value = '';
+        document.getElementById('prod_precio').value = '';
+        document.getElementById('prod_categoria').value = '';
+        document.getElementById('prod_stock').value = '';
+        document.getElementById('prod_imagen').value = '';
+        cargarProductos();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    async function eliminarProducto(id) {
+      if (!confirm('¿Eliminar este producto?')) return;
+      try {
+        const { error } = await supabase.from('productos').delete().eq('id', id);
+        if (error) throw error;
+        cargarProductos();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // GUARDAR CURSO
+    async function guardarCurso() {
+      const nombre = document.getElementById('curso_nombre').value;
+      const desc = document.getElementById('curso_desc').value;
+      const inicio = document.getElementById('curso_inicio').value;
+      const duracion = document.getElementById('curso_duracion').value;
+      const ciudad = document.getElementById('curso_ciudad').value;
+      const precio_regular = document.getElementById('curso_precio_regular').value;
+      const precio_preventa = document.getElementById('curso_precio_preventa').value;
+      const precio_evento = document.getElementById('curso_precio_evento').value;
+      const imagen = document.getElementById('curso_imagen').value;
+      const estado = document.getElementById('curso_estado').value;
+
+      if (!nombre || !precio_regular) {
+        alert('Nombre y precio regular son requeridos');
+        return;
+      }
+
+      try {
+        // Primero intenta actualizar, si no existe inserta
+        const { data: existing } = await supabase
+          .from('cursos')
+          .select('id')
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          const { error } = await supabase
+            .from('cursos')
+            .update({
+              nombre,
+              descripcion: desc,
+              inicio: inicio || null,
+              duracion_semanas: parseInt(duracion),
+              ciudad,
+              precio_regular: parseFloat(precio_regular),
+              precio_preventa: parseFloat(precio_preventa),
+              precio_evento: parseFloat(precio_evento),
+              imagen_url: imagen,
+              estado
+            })
+            .eq('id', existing[0].id);
+          
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from('cursos').insert([{
+            nombre,
+            descripcion: desc,
+            inicio: inicio || null,
+            duracion_semanas: parseInt(duracion),
+            ciudad,
+            precio_regular: parseFloat(precio_regular),
+            precio_preventa: parseFloat(precio_preventa),
+            precio_evento: parseFloat(precio_evento),
+            imagen_url: imagen,
+            estado
+          }]);
+          if (error) throw error;
+        }
+
+        alert('Curso guardado');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // GUARDAR RETIRO
+    async function guardarRetiro() {
+      const nombre = document.getElementById('retiro_nombre').value;
+      const desc = document.getElementById('retiro_desc').value;
+      const ubicacion = document.getElementById('retiro_ubicacion').value;
+      const inicio = document.getElementById('retiro_inicio').value;
+      const fin = document.getElementById('retiro_fin').value;
+      const cupos = document.getElementById('retiro_cupos').value;
+      const adelanto = document.getElementById('retiro_adelanto').value;
+      const precio_regular = document.getElementById('retiro_precio_regular').value;
+      const precio_preventa = document.getElementById('retiro_precio_preventa').value;
+      const precio_evento = document.getElementById('retiro_precio_evento').value;
+      const imagen = document.getElementById('retiro_imagen').value;
+      const incluye = document.getElementById('retiro_incluye').value.split('\n').filter(x => x.trim());
+      const estado = document.getElementById('retiro_estado').value;
+
+      if (!nombre || !precio_regular) {
+        alert('Nombre y precio regular son requeridos');
+        return;
+      }
+
+      try {
+        const { data: existing } = await supabase
+          .from('retiros')
+          .select('id')
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          const { error } = await supabase
+            .from('retiros')
+            .update({
+              nombre,
+              descripcion: desc,
+              ubicacion,
+              fecha_inicio: inicio || null,
+              fecha_fin: fin || null,
+              cupos_max: parseInt(cupos),
+              adelanto_requerido: parseFloat(adelanto),
+              precio_regular: parseFloat(precio_regular),
+              precio_preventa: parseFloat(precio_preventa),
+              precio_evento: parseFloat(precio_evento),
+              imagen_url: imagen,
+              incluye,
+              estado
+            })
+            .eq('id', existing[0].id);
+          
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from('retiros').insert([{
+            nombre,
+            descripcion: desc,
+            ubicacion,
+            fecha_inicio: inicio || null,
+            fecha_fin: fin || null,
+            cupos_max: parseInt(cupos),
+            adelanto_requerido: parseFloat(adelanto),
+            precio_regular: parseFloat(precio_regular),
+            precio_preventa: parseFloat(precio_preventa),
+            precio_evento: parseFloat(precio_evento),
+            imagen_url: imagen,
+            incluye,
+            estado
+          }]);
+          if (error) throw error;
+        }
+
+        alert('Retiro guardado');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // GUARDAR MEMBRESÍA
+    async function guardarMembresia() {
+      const nombre = document.getElementById('mem_nombre').value;
+      const desc = document.getElementById('mem_desc').value;
+      const precio_regular = document.getElementById('mem_precio_regular').value;
+      const precio_preventa = document.getElementById('mem_precio_preventa').value;
+      const precio_evento = document.getElementById('mem_precio_evento').value;
+      const beneficios = document.getElementById('mem_beneficios').value.split('\n').filter(x => x.trim());
+      const imagen = document.getElementById('mem_imagen').value;
+      const estado = document.getElementById('mem_estado').value;
+
+      if (!nombre || !precio_regular) {
+        alert('Nombre y precio son requeridos');
+        return;
+      }
+
+      try {
+        const { data: existing } = await supabase
+          .from('membresias')
+          .select('id')
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          const { error } = await supabase
+            .from('membresias')
+            .update({
+              nombre,
+              descripcion: desc,
+              precio_regular: parseFloat(precio_regular),
+              precio_preventa: parseFloat(precio_preventa),
+              precio_evento: parseFloat(precio_evento),
+              beneficios,
+              imagen_url: imagen,
+              estado
+            })
+            .eq('id', existing[0].id);
+          
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from('membresias').insert([{
+            nombre,
+            descripcion: desc,
+            precio_regular: parseFloat(precio_regular),
+            precio_preventa: parseFloat(precio_preventa),
+            precio_evento: parseFloat(precio_evento),
+            beneficios,
+            imagen_url: imagen,
+            estado,
+            ciclo_renovacion: 'mensual'
+          }]);
+          if (error) throw error;
+        }
+
+        alert('Membresía guardada');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // CARGAR INSCRIPCIONES
+    async function cargarInscripciones() {
+      const filtro = document.getElementById('filtro_tipo').value;
+      
+      try {
+        let query = supabase.from('registros').select('*');
+        
+        if (filtro) {
+          query = query.eq('tipo_registro', filtro);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false }).limit(100);
+        
+        if (error) throw error;
+
+        const tbody = document.getElementById('inscripcionesBody');
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="loading">No hay registros</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.map(r => {
+          const tipo = r.tipo_registro || 'taller';
+          const tipoLabel = {
+            'curso': '📚 Curso',
+            'retiro': '🏔️ Retiro',
+            'membresia': '👥 Membresía',
+            'taller': '✨ Taller',
+            'producto': '📦 Producto'
+          }[tipo] || tipo;
+
+          return `
+            <tr>
+              <td>${r.nombre || '-'}</td>
+              <td>${r.email || '-'}</td>
+              <td>${r.whatsapp || '-'}</td>
+              <td>${tipoLabel}</td>
+              <td>S/ ${r.monto ? parseFloat(r.monto).toFixed(2) : '-'}</td>
+              <td><span class="status-badge status-${r.estado || 'pendiente'}">${r.estado || 'pendiente'}</span></td>
+              <td>${new Date(r.created_at).toLocaleDateString('es-PE')}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Cargar productos al iniciar
+    window.addEventListener('load', () => {
+      cargarProductos();
+    });
+  </script>
+</body>
+</html>
